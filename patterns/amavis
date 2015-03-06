@@ -1,0 +1,9 @@
+AMAVIS_THREAD \d+-\d\d
+AMAVIS_COMP amavis(?:\[%{POSINT:pid}\])?: \(%{AMAVIS_THREAD:thread}\)
+AMAVIS %{SYSLOGTIMESTAMP:timestamp} %{SYSLOGHOST:hostname} %{AMAVIS_COMP}
+
+# Amavis check
+AMAVIS_FILECHECK ESMTP:%{RELAYIPPORT}:%{NONNEGINT:relay_port} %{DATA:quarantine_file}: <(?:%{EMAILADDRESS:from})?> -> %{DATA:to}( SIZE=%{POSINT:size})? Received: %{GREEDYDATA:summary}
+AMAVIS_CHECKING Checking: %{DATA:amavis_mail_id} %{DATA:amavis_src_net} %{RELAYIPPORT} <(?:%{EMAILADDRESS:from})?> -> %{GREEDYDATA:to}
+AMAVIS_DKIM FWD from <(?:%{EMAILADDRESS:from})?> -> %{DATA:to},( BODY=%{DATA:amavis_body})? 250 2.0.0 from MTA\(smtp:%{RELAYIPPORT}:%{NONNEGINT:relay_port}\): 250 2.0.0 Ok: queued as %{QUEUEID:queued_as}
+AMAVISRESULT %{AMAVISSTATUS:status} %{DATA:result} (\(%{DATA:result_summary}\) )?\{%{DATA:actions}\}, %{DATA}\/%{DATA:src_net} %{RELAYIPPORT:local_ip}:%{NONNEGINT:relay_port} %{RELAYIPPORT:remote_ip} <(?:%{EMAILADDRESS:from})?> -> %{DATA:to}(,)?,( quarantine: %{DATA:quarantine},)? Queue-ID: %{QUEUEID:qid}, Message-ID: <%{EMAILADDRESS:messageid}>, mail_id: %{DATA:mail_id}, Hits: %{DATA:hits}, size: %{NONNEGINT:size},( queued_as: %{DATA:queued_as},)?( dkim_sd=%{DATA:dkim_sd},)? %{NONNEGINT:delay} ms

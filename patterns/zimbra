@@ -1,0 +1,9 @@
+# audit.log
+ZMLOGLEVEL %{WORD:level}
+ZMPROCESS %{WORD:process}
+ZMTHREAD %{POSINT:thread}
+ZMPROGRAM \[%{ZMPROCESS}-%{ZMTHREAD}(:%{DATA:program_info})?\]
+ZMCLIENT \[(name=%{DATA:user};)?(ip=%{IPORHOST:src_ip};)?(oip=%{IPORHOST:org_ip};)?(via=%{DATA:via};)?(ua=%{DATA:user_agent};)?\]
+ZMCOMMAND cmd=%{WORD:command}
+ZMCOMMAND_PARAMS (%{WORD:target_type}=%{DATA:target}(; protocol=%{WORD:protocol})?(; error=%{DATA:error})?(; feature=%{WORD:feature})?(; member=%{DATA:member})?(; status=%{WORD:status})?;)?
+ZMAUDIT %{TIMESTAMP_ISO8601} %{ZMLOGLEVEL}  %{ZMPROGRAM} %{ZMCLIENT} security - %{ZMCOMMAND};( %{ZMCOMMAND_PARAMS})?
