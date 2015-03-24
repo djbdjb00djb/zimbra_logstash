@@ -1,6 +1,6 @@
 AMAVIS_THREAD \d+-\d\d
 AMAVIS_COMP amavis(?:\[%{POSINT:pid}\])?: \(%{AMAVIS_THREAD:thread}\)
-AMAVIS %{SYSLOGTIMESTAMP:timestamp} %{SYSLOGHOST:hostname} %{AMAVIS_COMP}
+AMAVIS %{SYSLOGTIMESTAMP:created_at} %{SYSLOGHOST:hostname} %{AMAVIS_COMP}
 
 # Amavis check
 AMAVIS_FILECHECK ESMTP:%{RELAYIPPORT}:%{NONNEGINT:relay_port} %{DATA:quarantine_file}: <(?:%{EMAILADDRESS:from})?> -> %{DATA:to}( SIZE=%{POSINT:size})? Received: %{GREEDYDATA:summary}
