@@ -1,4 +1,4 @@
 #SASL
 SASLD_COM saslauthd(?:\[%{POSINT:pid}\])?: %{DATA:provider}:
 SASLD %{SYSLOGTIMESTAMP:created_at} %{SYSLOGHOST:hostname} %{SASLD_COM}
-SALSDRESULT %{EMAILADDRESS:username} auth %{SASLDSTATUS:result}(: authentication failed for %{SASLDEMAIL})?
+SALSDRESULT %{EMAILADDRESS:target} auth %{SASLDSTATUS:result}(: authentication failed for %{SASLDEMAIL})?
