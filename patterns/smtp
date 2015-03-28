@@ -6,8 +6,12 @@ POSTFIX %{SYSLOGTIMESTAMP:created_at} %{SYSLOGHOST:hostname} %{COMPID}:
  
 QUEUEID (?:[A-F0-9]+|NOQUEUE)
 EMAILADDRESSPART [a-zA-Z0-9_.+-=:]+
-EMAILADDRESS %{EMAILADDRESSPART:local}@%{EMAILADDRESSPART:domain}
+EMAILADDRESS %{EMAILADDRESSPART}@%{EMAILADDRESSPART}
+FROMEMAILADDRESS %{EMAILADDRESSPART}@%{EMAILADDRESSPART:from_domain}
+TOEMAILADDRESS %{EMAILADDRESSPART}@%{EMAILADDRESSPART:to_domain}
 RELAY (?:%{HOSTNAME:relayhost}(?:\[%{IP:relayip}\](?::[0-9]+(.[0-9]+)?)?)?)
+SRCRELAY (?:%{HOSTNAME:src_relayhost}(?:\[%{IP:src_relayip}\](?::[0-9]+(.[0-9]+)?)?)?)
+DSTRELAY (?:%{HOSTNAME:dst_relayhost}(?:\[%{IP:dst_relayip}\](?::[0-9]+(.[0-9]+)?)?)?)
 POSREAL [0-9]+(.[0-9]+)?
 DELAYS (%{POSREAL}[/]*)+
 DSN %{NONNEGINT}.%{NONNEGINT}.%{NONNEGINT}
@@ -18,25 +22,25 @@ POSTFIXACTION discard|dunno|filter|hold|ignore|info|prepend|redirect|replace|rej
 RELAYIPPORT (?:\[%{IP:relayip}\])
  
 # postfix/smtp and postfix/lmtp and postfix/local
-POSTFIXSMTPRELAY %{QUEUEID:qid}: to=<%{EMAILADDRESS:to}>,(?:\sorig_to=<%{EMAILADDRESS:orig_to}>,)? relay=%{RELAY}, delay=%{POSREAL:delay}, delays=%{DELAYS:delays}, dsn=%{DSN:dsn}, status=%{STATUS:result}
+POSTFIXSMTPRELAY %{QUEUEID:qid}: to=<%{TOEMAILADDRESS:to}>,(?:\sorig_to=<%{TOEMAILADDRESS:orig_to}>,)? relay=%{DSTRELAY}, delay=%{POSREAL:delay}, delays=%{DELAYS:delays}, dsn=%{DSN:dsn}, status=%{STATUS:result}
 POSTFIXSMTPRELAYGENERAL %{POSTFIXSMTPRELAY} \(%{DATA:reason}\)$
 #POSTFIXSMTPRELAY_TO_DKIM %{POSTFIXSMTPRELAY} \(250 2.0.0 from MTA\(smtp:\[127.0.0.1\]:10030\): 250 2.0.0 Ok: queued as %{QUEUEID:queued_as}\) 
 POSTFIXSMTPRELAY_TO_DKIM %{POSTFIXSMTPRELAY} \(%{DATA:reason}: queued as %{QUEUEID:queued_as}\) 
-POSTFIXSMTPCONNECT connect to %{RELAY}: %{GREEDYDATA:reason}
-POSTFIXSMTP4XX %{QUEUEID:qid}: host %{RELAY} said: %{GREEDYDATA:reason}
-POSTFIXSMTP5XX %{QUEUEID:qid}: to=<%{EMAILADDRESS:to}>,(?:\sorig_to=<%{EMAILADDRESS:orig_to}>,)? relay=%{RELAY}, delay=%{POSREAL:delay}, delays=%{DELAYS:delays}, dsn=%{DSN:dsn}, status=%{STATUS:result} \(host %{HOSTNAME}\[%{IP}\] said: %{PERMERROR:responsecode} %{DATA:smtp_response} \(in reply to %{DATA:command} command\)\)
-POSTFIXSMTPREFUSAL %{QUEUEID:qid}: host %{RELAY} refused to talk to me: %{GREEDYDATA:reason}
-POSTFIXSMTPLOSTCONNECTION %{QUEUEID:qid}: lost connection with %{RELAY} while %{GREEDYDATA:reason}
-POSTFIXSMTPTIMEOUT %{QUEUEID:qid}: conversation with %{RELAY} timed out while %{GREEDYDATA:reason}
+POSTFIXSMTPCONNECT connect to %{DSTRELAY}: %{GREEDYDATA:reason}
+POSTFIXSMTP4XX %{QUEUEID:qid}: host %{DSTRELAY} said: %{GREEDYDATA:reason}
+POSTFIXSMTP5XX %{QUEUEID:qid}: to=<%{TOEMAILADDRESS:to}>,(?:\sorig_to=<%{TOEMAILADDRESS:orig_to}>,)? relay=%{DSTRELAY}, delay=%{POSREAL:delay}, delays=%{DELAYS:delays}, dsn=%{DSN:dsn}, status=%{STATUS:result} \(host %{HOSTNAME}\[%{IP}\] said: %{PERMERROR:responsecode} %{DATA:smtp_response} \(in reply to %{DATA:command} command\)\)
+POSTFIXSMTPREFUSAL %{QUEUEID:qid}: host %{DSTRELAY} refused to talk to me: %{GREEDYDATA:reason}
+POSTFIXSMTPLOSTCONNECTION %{QUEUEID:qid}: lost connection with %{DSTRELAY} while %{GREEDYDATA:reason}
+POSTFIXSMTPTIMEOUT %{QUEUEID:qid}: conversation with %{DSTRELAY} timed out while %{GREEDYDATA:reason}
  
 # postfix/smtpd
-POSTFIXSMTPDTLSCONNECT TLS connection established from %{RELAY}: %{GREEDYDATA:tls_info} 
-POSTFIXSMTPDCONNECT connect from %{RELAY}
-POSTFIXSMTPDDISCONNECT disconnect from %{RELAY}
-POSTFIXSMTPDACTIONS %{QUEUEID:qid}: %{POSTFIXACTION:action}: %{DATA:command} from %{RELAY}: %{DATA:smtp_response}: %{DATA:reason}; from=<%{EMAILADDRESS:from}> to=<%{EMAILADDRESS:to}> proto=%{DATA:proto} helo=<%{IPORHOST}>
-POSTFIXSMTPDTIMEOUTS timeout after %{DATA:command} from %{RELAY}
-POSTFIXSMTPDLOGIN %{QUEUEID:qid}: client=%{DATA:client}, sasl_method=%{DATA:saslmethod}, sasl_username=%{EMAILADDRESS:saslusername}
-POSTFIXSMTPDCLIENT %{QUEUEID:qid}: client=%{RELAY:client}$
+POSTFIXSMTPDTLSCONNECT TLS connection established from %{SRCRELAY}: %{GREEDYDATA:tls_info} 
+POSTFIXSMTPDCONNECT connect from %{SRCRELAY}
+POSTFIXSMTPDDISCONNECT disconnect from %{SRCRELAY}
+POSTFIXSMTPDACTIONS %{QUEUEID:qid}: %{POSTFIXACTION:action}: %{DATA:command} from %{SRCRELAY}: %{DATA:smtp_response}: %{DATA:reason}; from=<%{FROMEMAILADDRESS:from}> to=<%{TOEMAILADDRESS:to}> proto=%{DATA:proto} helo=<%{IPORHOST}>
+POSTFIXSMTPDTIMEOUTS timeout after %{DATA:command} from %{SRCRELAY}
+POSTFIXSMTPDLOGIN %{QUEUEID:qid}: client=%{DATA:client}, sasl_method=%{DATA:saslmethod}, sasl_username=%{EMAILADDRESS:target}
+POSTFIXSMTPDCLIENT %{QUEUEID:qid}: client=%{SRCRELAY:client}$
  
 # postfix/cleanup
 POSTFIXCLEANUP %{QUEUEID:qid}: message-id=<%{EMAILADDRESS:messageid}>
@@ -45,4 +49,4 @@ POSTFIXCLEANUP %{QUEUEID:qid}: message-id=<%{EMAILADDRESS:messageid}>
 POSTFIXBOUNCE %{QUEUEID:qid}: sender non-delivery notification: %{QUEUEID:bouncequeueid}
  
 # postfix/qmgr and postfix/pickup
-POSTFIXQMGR %{QUEUEID:qid}: (?:removed|from=<(?:%{EMAILADDRESS:from})?>(?:, size=%{POSINT:size}, nrcpt=%{POSINT:nrcpt} \(%{GREEDYDATA:queuestatus}\))?)
+POSTFIXQMGR %{QUEUEID:qid}: (?:removed|from=<(?:%{FROMEMAILADDRESS:from})?>(?:, size=%{POSINT:size}, nrcpt=%{POSINT:nrcpt} \(%{GREEDYDATA:queuestatus}\))?)
