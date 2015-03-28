@@ -1,7 +1,7 @@
 # audit.log
 ZMLOGLEVEL %{WORD:level}
-ZMPROCESS %{WORD:process}
-ZMTHREAD %{POSINT:thread}
+ZMPROCESS %{PROG:process}
+ZMTHREAD %{NONNEGINT:thread}
 ZMPROGRAM \[%{ZMPROCESS}-%{ZMTHREAD}(:%{DATA:program_info})?\]
 ZMCLIENT \[(name=%{DATA:user};)?(ip=%{IPORHOST:src_ip};)?(oip=%{IPORHOST:org_ip};)?(via=%{DATA:via};)?(ua=%{DATA:user_agent};)?\]
 ZMCOMMAND cmd=%{WORD:command}
