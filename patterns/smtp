@@ -16,9 +16,6 @@ PERMERROR 5[0-9]{2}
 MESSAGELEVEL reject|warning|error|fatal|panic
 POSTFIXACTION discard|dunno|filter|hold|ignore|info|prepend|redirect|replace|reject|warn
 RELAYIPPORT (?:\[%{IP:relayip}\])
-AMAVISSTATUS (?:Passed|Blocked)
-SASLDSTATUS (?:failed|OK)
-SASLDEMAIL (?:\[%{EMAILADDRESS:email}\])
  
 # postfix/smtp and postfix/lmtp and postfix/local
 POSTFIXSMTPRELAY %{QUEUEID:qid}: to=<%{EMAILADDRESS:to}>,(?:\sorig_to=<%{EMAILADDRESS:orig_to}>,)? relay=%{RELAY}, delay=%{POSREAL:delay}, delays=%{DELAYS:delays}, dsn=%{DSN:dsn}, status=%{STATUS:result}
