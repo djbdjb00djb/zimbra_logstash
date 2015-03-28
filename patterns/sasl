@@ -3,5 +3,5 @@ SASLSTATUS (?:failed|OK)
 SASLEMAIL (?:\[%{EMAILADDRESS:email}\])
 
 SASL_COM saslauthd(?:\[%{POSINT:pid}\])?: %{DATA:provider}:
-SASL %{SYSLOGTIMESTAMP:created_at} %{SYSLOGHOST:hostname} %{SASL_COM}
+SASLAUTHD %{SYSLOGTIMESTAMP:created_at} %{SYSLOGHOST:hostname} %{SASL_COM}
 SALSRESULT %{EMAILADDRESS:target} auth %{SASLSTATUS:result}(: authentication failed for %{SASLEMAIL})?
