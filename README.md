@@ -62,7 +62,7 @@ We try to use moslty `filters`when we can, because this are fasters than `querie
 ### Zimbra logs Dashboard
 In this Dashboard we show information mostly getted from the `17-filter-nginx` and `18-filter-zimbra`.
 
-
+!(Kibana Dashboard)[https://raw.githubusercontent.com/ITLinuxCL/zimbra_logstash/master/examples/dashboard.png]
 
 ### SASL Failed Login query source code
 
