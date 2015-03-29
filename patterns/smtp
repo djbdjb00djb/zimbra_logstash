@@ -39,7 +39,7 @@ POSTFIXSMTPDCONNECT connect from %{SRCRELAY}
 POSTFIXSMTPDDISCONNECT disconnect from %{SRCRELAY}
 POSTFIXSMTPDACTIONS %{QUEUEID:qid}: %{POSTFIXACTION:action}: %{DATA:command} from %{SRCRELAY}: %{DATA:smtp_response}: %{DATA:reason}; from=<%{FROMEMAILADDRESS:from}> to=<%{TOEMAILADDRESS:to}> proto=%{DATA:proto} helo=<%{IPORHOST}>
 POSTFIXSMTPDTIMEOUTS timeout after %{DATA:command} from %{SRCRELAY}
-POSTFIXSMTPDLOGIN %{QUEUEID:qid}: client=%{DATA:client}, sasl_method=%{DATA:saslmethod}, sasl_username=%{EMAILADDRESS:target}
+POSTFIXSMTPDLOGIN %{QUEUEID:qid}: client=%{DATA:client}, sasl_method=%{DATA:saslmethod}, sasl_username=%{EMAILADDRESS:username}
 POSTFIXSMTPDCLIENT %{QUEUEID:qid}: client=%{SRCRELAY:client}$
  
 # postfix/cleanup
