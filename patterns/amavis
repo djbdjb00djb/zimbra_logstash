@@ -1,7 +1,7 @@
 AMAVISSTATUS (?:Passed|Blocked)
 AMAVIS_THREAD \d+-\d\d
 AMAVIS_COMP amavis(?:\[%{POSINT:pid}\])?: \(%{AMAVIS_THREAD:thread}\)
-AMAVIS %{SYSLOGTIMESTAMP:created_at} %{SYSLOGHOST:hostname} %{AMAVIS_COMP}
+AMAVIS %{TIMESTAMP_ISO8601:created_at} %{SYSLOGHOST:hostname} %{AMAVIS_COMP}
 
 # Amavis check
 AMAVIS_FILECHECK ESMTP:%{RELAYIPPORT}:%{NONNEGINT:relay_port} %{DATA:quarantine_file}: <(?:%{FROMEMAILADDRESS:from})?> -> %{DATA:to}( SIZE=%{POSINT:size})? Received: %{GREEDYDATA:summary}
