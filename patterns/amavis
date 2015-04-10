@@ -1,6 +1,6 @@
 AMAVISSTATUS (?:Passed|Blocked)
-AMAVIS_THREAD \d+-\d\d
-AMAVIS_COMP amavis(?:\[%{POSINT:pid}\])?: \(%{AMAVIS_THREAD:thread}\)
+AMAVIS_THREAD \(%{DATA:thread}\)
+AMAVIS_COMP amavis(?:\[%{POSINT:pid}\])?: %{AMAVIS_THREAD}
 AMAVIS %{TIMESTAMP_ISO8601:created_at} %{SYSLOGHOST:hostname} %{AMAVIS_COMP}
 
 # Amavis check
