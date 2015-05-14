@@ -12,6 +12,7 @@ TOEMAILADDRESS %{EMAILADDRESSPART}@%{EMAILADDRESSPART:to_domain}
 RELAY (?:%{HOSTNAME:relayhost}(?:\[%{IP:relayip}\](?::[0-9]+(.[0-9]+)?)?)?)
 SRCRELAY (?:%{HOSTNAME:src_relayhost}(?:\[%{IP:src_relayip}\](?::[0-9]+(.[0-9]+)?)?)?)
 DSTRELAY (?:%{HOSTNAME:dst_relayhost}(?:\[%{IP:dst_relayip}\](?::[0-9]+(.[0-9]+)?)?)?)
+CLIENT (?:%{HOSTNAME:clienthost}(?:\[%{IP:clientip}\](?::[0-9]+(.[0-9]+)?)?)?)
 POSREAL [0-9]+(.[0-9]+)?
 DELAYS (%{POSREAL}[/]*)+
 DSN %{NONNEGINT}.%{NONNEGINT}.%{NONNEGINT}
@@ -39,7 +40,8 @@ POSTFIXSMTPDCONNECT connect from %{SRCRELAY}
 POSTFIXSMTPDDISCONNECT disconnect from %{SRCRELAY}
 POSTFIXSMTPDACTIONS %{QUEUEID:qid}: %{POSTFIXACTION:action}: %{DATA:command} from %{SRCRELAY}: %{DATA:smtp_response}: %{DATA:reason}; from=<%{FROMEMAILADDRESS:from}> to=<%{TOEMAILADDRESS:to}> proto=%{DATA:proto} helo=<%{IPORHOST}>
 POSTFIXSMTPDTIMEOUTS timeout after %{DATA:command} from %{SRCRELAY}
-POSTFIXSMTPDLOGIN %{QUEUEID:qid}: client=%{DATA:client}, sasl_method=%{DATA:saslmethod}, sasl_username=%{EMAILADDRESS:username}
+POSTFIXSMTPDLOGIN %{QUEUEID:qid}: client=%{CLIENT}, sasl_method=%{DATA:saslmethod}, sasl_username=%{EMAILADDRESS:username}
+POSTFIXSMTPDLOGINFAILED warning: %{CLIENT}: SASL LOGIN authentication failed: authentication failure
 POSTFIXSMTPDCLIENT %{QUEUEID:qid}: client=%{SRCRELAY:client}$
  
 # postfix/cleanup
