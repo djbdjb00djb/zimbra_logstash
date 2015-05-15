@@ -41,7 +41,7 @@ POSTFIXSMTPDDISCONNECT disconnect from %{SRCRELAY}
 POSTFIXSMTPDACTIONS %{QUEUEID:qid}: %{POSTFIXACTION:action}: %{DATA:command} from %{SRCRELAY}: %{DATA:smtp_response}: %{DATA:reason}; from=<%{FROMEMAILADDRESS:from}> to=<%{TOEMAILADDRESS:to}> proto=%{DATA:proto} helo=<%{IPORHOST}>
 POSTFIXSMTPDTIMEOUTS timeout after %{DATA:command} from %{SRCRELAY}
 POSTFIXSMTPDSETQIDWITHSASL %{QUEUEID:qid}: client=%{CLIENT}, sasl_method=%{DATA:saslmethod}, sasl_username=%{GREEDYDATA:username}
-POSTFIXSMTPDSETQID %{QUEUEID:qid}: client=%{CLIENT}
+POSTFIXSMTPDSETQID %{QUEUEID:qid}: client=%{CLIENT}$
 POSTFIXSMTPDLOGINFAILED warning: %{CLIENT}: SASL LOGIN authentication failed: authentication failure
 POSTFIXSMTPDCLIENT %{QUEUEID:qid}: client=%{SRCRELAY:client}$
  
