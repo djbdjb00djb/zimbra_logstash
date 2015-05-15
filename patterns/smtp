@@ -46,7 +46,7 @@ POSTFIXSMTPDLOGINFAILED warning: %{CLIENT}: SASL LOGIN authentication failed: au
 POSTFIXSMTPDCLIENT %{QUEUEID:qid}: client=%{SRCRELAY:client}$
  
 # postfix/cleanup
-POSTFIXCLEANUP %{QUEUEID:qid}: message-id=<%{EMAILADDRESS:messageid}>
+POSTFIXCLEANUP %{QUEUEID:qid}: message-id=<%{GREEDYDATA:messageid}>
  
 # postfix/bounce
 POSTFIXBOUNCE %{QUEUEID:qid}: sender non-delivery notification: %{QUEUEID:bouncequeueid}
