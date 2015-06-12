@@ -23,7 +23,7 @@ POSTFIXACTION discard|dunno|filter|hold|ignore|info|prepend|redirect|replace|rej
 RELAYIPPORT (?:\[%{IP:relayip}\])
  
 # postfix/smtp and postfix/lmtp and postfix/local
-POSTFIXSMTPRELAY %{QUEUEID:qid}: to=<%{TOEMAILADDRESS:to}>,(?:\sorig_to=<%{TOEMAILADDRESS:orig_to}>,)? relay=%{DSTRELAY}, delay=%{POSREAL:delay}, delays=%{DELAYS:delays}, dsn=%{DSN:dsn}, status=%{STATUS:result}
+POSTFIXSMTPRELAY %{QUEUEID:qid}: to=<%{TOEMAILADDRESS:to}>,(?:\sorig_to=<%{TOEMAILADDRESS:orig_to}>,)? relay=%{DSTRELAY},( conn_use=%{NUMBER:conn_use},)? delay=%{POSREAL:delay}, delays=%{DELAYS:delays}, dsn=%{DSN:dsn}, status=%{STATUS:result}
 POSTFIXSMTPRELAYGENERAL %{POSTFIXSMTPRELAY} \(%{DATA:reason}\)$
 #POSTFIXSMTPRELAY_TO_DKIM %{POSTFIXSMTPRELAY} \(250 2.0.0 from MTA\(smtp:\[127.0.0.1\]:10030\): 250 2.0.0 Ok: queued as %{QUEUEID:queued_as}\) 
 POSTFIXSMTPRELAY_TO_DKIM %{POSTFIXSMTPRELAY} \(%{DATA:reason}: queued as %{QUEUEID:queued_as}\) 
