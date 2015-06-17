@@ -33,6 +33,7 @@ POSTFIXSMTP5XX %{QUEUEID:qid}: to=<%{TOEMAILADDRESS:to}>,(?:\sorig_to=<%{TOEMAIL
 POSTFIXSMTPREFUSAL %{QUEUEID:qid}: host %{DSTRELAY} refused to talk to me: %{GREEDYDATA:reason}
 POSTFIXSMTPLOSTCONNECTION %{QUEUEID:qid}: lost connection with %{DSTRELAY} while %{GREEDYDATA:reason}
 POSTFIXSMTPTIMEOUT %{QUEUEID:qid}: conversation with %{DSTRELAY} timed out while %{GREEDYDATA:reason}
+POSTFIXPOSTSUPER %{QUEUEID:qid}: %{GREEDYDATA:action}
  
 # postfix/smtpd
 POSTFIXSMTPDTLSCONNECT TLS connection established from %{SRCRELAY}: %{GREEDYDATA:tls_info} 
